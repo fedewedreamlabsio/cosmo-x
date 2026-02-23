@@ -256,7 +256,7 @@ export async function getListTimeline(
 ): Promise<TweetData[]> {
   const res = await rl.call("list.timeline", () =>
     client.lists.getPosts(listId, {
-      maxResults: Math.min(maxResults, 100),
+      maxResults: Math.max(5, Math.min(maxResults, 100)),
       tweetFields: ["created_at", "public_metrics", "author_id"],
       expansions: ["author_id"],
       userFields: ["username", "public_metrics"],
@@ -297,12 +297,14 @@ export async function getUserTimeline(
 ): Promise<TweetData[]> {
   const res = await rl.call("user.timeline", () =>
     client.users.getPosts(userId, {
-      maxResults: Math.min(maxResults, 100),
+      maxResults: Math.max(5, Math.min(maxResults, 100)),
       tweetFields: ["created_at", "public_metrics"],
     })
   );
 
-  return (res.data ?? []).map((d) => ({
+  // Trim to requested count (API minimum is 5)
+  const data = (res.data ?? []).slice(0, maxResults);
+  return data.map((d) => ({
     id: str(d.id),
     text: d.text ?? "",
     createdAt: d.createdAt,
