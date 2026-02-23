@@ -9,10 +9,14 @@
     "cosmo-x": "dist/cli.js"
   },
   "scripts": {
-    "build": "tsc",
+    "build": "tsc -p tsconfig.json && tsc -p tsconfig.test.json",
+    "build:src": "tsc -p tsconfig.json",
     "dev": "tsc --watch",
     "cli": "node --enable-source-maps dist/cli.js",
-    "test": "node --enable-source-maps dist/cli.js test"
+    "test": "npm run build && node --test dist-tests/unit/*.test.js",
+    "test:integration": "npm run build && node --test dist-tests/integration/*.test.js",
+    "test:all": "npm run build && node --test dist-tests/unit/*.test.js dist-tests/integration/*.test.js",
+    "connectivity": "node --enable-source-maps dist/cli.js test"
   },
   "dependencies": {
     "@xdevplatform/xdk": "^0.4.0"
