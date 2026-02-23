@@ -90,7 +90,7 @@ async function main(): Promise<void> {
       const listId = args[1];
       if (!listId) { console.error("Usage: cosmo-x list <listId> [count]"); process.exit(1); }
       const count = parseInt(args[2] ?? "10", 10);
-      const posts = await getListTimeline(cosmo.reader, rl, listId, count);
+      const posts = await getListTimeline(cosmo.client, rl, listId, count);
       console.log(JSON.stringify(posts, null, 2));
       break;
     }
